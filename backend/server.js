@@ -1,6 +1,11 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const cors = require('cors');
 const connectDB = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -10,13 +15,29 @@ connectDB();
 
 const app = express();
 
-// Middleware
-app.use(express.json());
+// Security middleware
+app.use(helmet());
+app.use(mongoSanitize());
 
-// Test route
+// CORS — allow frontend origin with credentials
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    credentials: true,
+  })
+);
+
+// Body parsers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// Routes
 app.get('/api/test', (req, res) => {
   res.json({ message: 'API working' });
 });
+
+app.use('/api/auth', authRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

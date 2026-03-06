@@ -1,0 +1,20 @@
+{
+  "name": "kagoz-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "mongoose": "^7.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.27",
+    "nodemon": "^3.0.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1"
+  }
+}

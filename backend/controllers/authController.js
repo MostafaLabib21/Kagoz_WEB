@@ -37,6 +37,7 @@ const register = async (req, res) => {
       email,
       password,
       authProvider: 'local',
+      role: 'customer',
       isEmailVerified: false,
     });
 
@@ -47,7 +48,14 @@ const register = async (req, res) => {
     user.emailVerifyOTPExpiry = new Date(Date.now() + 15 * 60 * 1000);
     await user.save({ validateBeforeSave: false });
 
-    await sendVerificationEmail(email, name, otp);
+    try {
+      await sendVerificationEmail(email, name, otp);
+    } catch (emailError) {
+      // Rollback: delete user if email sending fails
+      await User.findByIdAndDelete(user._id);
+      console.error('Email send error:', emailError.message);
+      return res.status(500).json({ message: 'Failed to send verification email. Please try again.' });
+    }
 
     res.status(201).json({ message: 'Verification code sent to your email' });
   } catch (error) {
@@ -200,12 +208,13 @@ const googleAuth = async (req, res) => {
       });
     }
 
-    // Create new Google user
+    // Create new Google user (always customer role)
     user = await User.create({
       name,
       email,
       googleId,
       authProvider: 'google',
+      role: 'customer',
       isEmailVerified: true,
     });
 

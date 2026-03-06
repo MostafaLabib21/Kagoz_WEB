@@ -252,6 +252,7 @@ const updateProfile = async (req, res) => {
 
     // Update allowed fields
     if (req.body.name) user.name = req.body.name;
+    if (req.body.phone !== undefined) user.phone = req.body.phone;
     if (req.body.address) user.address = req.body.address;
 
     // Password change for local users

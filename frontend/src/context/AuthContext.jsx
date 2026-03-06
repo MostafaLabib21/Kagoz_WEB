@@ -59,6 +59,15 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const refreshUser = async () => {
+    try {
+      const { data } = await axios.get('/api/auth/me');
+      setUser(data.user);
+    } catch {
+      setUser(null);
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -70,6 +79,7 @@ export const AuthProvider = ({ children }) => {
         login,
         googleLogin,
         logout,
+        refreshUser,
       }}
     >
       {children}

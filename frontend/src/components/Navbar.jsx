@@ -33,7 +33,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="text-xl font-bold text-indigo-600">
-            Kagoz
+            Kagoj
           </Link>
 
           {/* Right side */}

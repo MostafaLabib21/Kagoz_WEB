@@ -9,11 +9,11 @@ const ProfilePage = () => {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    street: '',
-    city: '',
-    state: '',
+    district: '',
+    upozela: '',
     zip: '',
-    country: '',
+    road: '',
+    houseNo: '',
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -31,11 +31,11 @@ const ProfilePage = () => {
       setFormData({
         name: user.name || '',
         phone: user.phone || '',
-        street: user.address?.street || '',
-        city: user.address?.city || '',
-        state: user.address?.state || '',
+        district: user.address?.district || '',
+        upozela: user.address?.upozela || '',
         zip: user.address?.zip || '',
-        country: user.address?.country || '',
+        road: user.address?.road || '',
+        houseNo: user.address?.houseNo || '',
       });
     }
   }, [user]);
@@ -62,11 +62,11 @@ const ProfilePage = () => {
         name: formData.name,
         phone: formData.phone,
         address: {
-          street: formData.street,
-          city: formData.city,
-          state: formData.state,
+          district: formData.district,
+          upozela: formData.upozela,
           zip: formData.zip,
-          country: formData.country,
+          road: formData.road,
+          houseNo: formData.houseNo,
         },
       });
       await refreshUser();
@@ -214,60 +214,66 @@ const ProfilePage = () => {
                 <hr className="my-2 border-gray-200" />
                 <h3 className="text-sm font-semibold text-gray-700">Shipping Address</h3>
 
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">District <span className="text-red-400">*</span></label>
+                    <input
+                      type="text"
+                      name="district"
+                      value={formData.district}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                      placeholder="e.g. Dhaka"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Upozela / Thana <span className="text-red-400">*</span></label>
+                    <input
+                      type="text"
+                      name="upozela"
+                      value={formData.upozela}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                      placeholder="e.g. Dhanmondi"
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Street</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code <span className="text-gray-400 text-xs">(optional)</span></label>
                   <input
                     type="text"
-                    name="street"
-                    value={formData.street}
+                    name="zip"
+                    value={formData.zip}
                     onChange={handleChange}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                    placeholder="123 Main St"
+                    placeholder="e.g. 1205"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Road <span className="text-gray-400 text-xs">(optional)</span></label>
                     <input
                       type="text"
-                      name="city"
-                      value={formData.city}
+                      name="road"
+                      value={formData.road}
                       onChange={handleChange}
                       className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                      placeholder="e.g. Road 5"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">House No. <span className="text-gray-400 text-xs">(optional)</span></label>
                     <input
                       type="text"
-                      name="state"
-                      value={formData.state}
+                      name="houseNo"
+                      value={formData.houseNo}
                       onChange={handleChange}
                       className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">ZIP Code</label>
-                    <input
-                      type="text"
-                      name="zip"
-                      value={formData.zip}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
-                    <input
-                      type="text"
-                      name="country"
-                      value={formData.country}
-                      onChange={handleChange}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+                      placeholder="e.g. 12/A"
                     />
                   </div>
                 </div>

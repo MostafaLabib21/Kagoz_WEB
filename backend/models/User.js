@@ -52,11 +52,11 @@ const userSchema = new mongoose.Schema({
     trim: true,
   },
   address: {
-    street: String,
-    city: String,
-    state: String,
+    district: String,
+    upozela: String,
     zip: String,
-    country: String,
+    road: String,
+    houseNo: String,
   },
   createdAt: {
     type: Date,

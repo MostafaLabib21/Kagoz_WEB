@@ -20,23 +20,18 @@ const DashboardPage = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-4 gap-4">
+      <div className="space-y-8">
+        <div className="grid grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm p-5 h-24 animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-24 mb-3" />
-              <div className="h-6 bg-gray-200 rounded w-16" />
+            <div key={i} className="bg-white rounded-lg border border-gray-100 p-6 h-32 animate-pulse">
+              <div className="h-4 bg-gray-100 rounded w-24 mb-4" />
+              <div className="h-8 bg-gray-100 rounded w-16" />
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-6 gap-3">
+        <div className="grid grid-cols-7 gap-4">
           {[...Array(7)].map((_, i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm p-4 h-20 animate-pulse" />
-          ))}
-        </div>
-        <div className="grid grid-cols-2 gap-6">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} className="bg-white rounded-lg shadow-sm p-6 h-80 animate-pulse" />
+            <div key={i} className="bg-white rounded-lg border border-gray-100 p-4 h-24 animate-pulse" />
           ))}
         </div>
       </div>
@@ -46,58 +41,61 @@ const DashboardPage = () => {
   const statuses = ['pending', 'confirmed', 'shipped_to_courier', 'out_for_delivery', 'delivered', 'money_received', 'cancelled'];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Row 1: Stat Cards */}
-      <div className="grid grid-cols-4 gap-4">
-        <StatCard title="Revenue Collected" value={`৳${(data.totalRevenue || 0).toFixed(2)}`} icon={Banknote} accentColor="green" />
-        <StatCard title="Total Orders" value={data.totalOrders} icon={ShoppingBag} accentColor="blue" />
-        <StatCard title="Total Products" value={data.totalProducts} icon={Package} accentColor="purple" />
-        <StatCard title="Total Customers" value={data.totalCustomers} icon={Users} accentColor="orange" />
+      <div className="grid grid-cols-4 gap-6">
+        <StatCard title="Revenue Collected" value={`৳${(data.totalRevenue || 0).toFixed(2)}`} icon={Banknote} accentColor="gray" />
+        <StatCard title="Total Orders" value={data.totalOrders} icon={ShoppingBag} accentColor="gray" />
+        <StatCard title="Total Products" value={data.totalProducts} icon={Package} accentColor="gray" />
+        <StatCard title="Total Customers" value={data.totalCustomers} icon={Users} accentColor="gray" />
       </div>
 
       {/* Row 2: Status Strip */}
-      <div className="grid grid-cols-7 gap-3">
-        {statuses.map((status) => {
-          const colors = STATUS_COLORS[status];
-          return (
-            <button
-              key={status}
-              onClick={() => navigate(`/admin/orders?status=${status}`)}
-              className="bg-white rounded-lg shadow-sm p-4 text-left hover:shadow-md transition"
-            >
-              <p className={`text-2xl font-bold ${colors.text}`}>
-                {data.ordersByStatus?.[status] || 0}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">{STATUS_LABELS[status]}</p>
-            </button>
-          );
-        })}
+      <div>
+        <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4">Order Status Overview</h3>
+        <div className="grid grid-cols-7 gap-4">
+          {statuses.map((status) => {
+            const colors = STATUS_COLORS[status];
+            return (
+              <button
+                key={status}
+                onClick={() => navigate(`/admin/orders?status=${status}`)}
+                className="bg-white border border-gray-100 rounded-lg p-4 text-left hover:border-gray-900 hover:shadow-sm transition-all group"
+              >
+                <p className={`text-2xl font-bold text-gray-900 group-hover:text-black`}>
+                  {data.ordersByStatus?.[status] || 0}
+                </p>
+                <p className="text-xs font-medium text-gray-500 mt-1 uppercase tracking-wider">{STATUS_LABELS[status]}</p>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Row 3: Panels */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-8">
         {/* Recent Orders */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Recent Orders</h3>
-            <Link to="/admin/orders" className="text-sm text-indigo-600 hover:text-indigo-800">View All</Link>
+        <div className="bg-white rounded-lg border border-gray-100 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-bold text-gray-900">Recent Orders</h3>
+            <Link to="/admin/orders" className="text-sm font-medium text-gray-900 hover:underline">View All</Link>
           </div>
           {data.recentOrders?.length ? (
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-xs text-gray-500 uppercase">
-                  <th className="pb-2">Order ID</th>
-                  <th className="pb-2">Customer</th>
-                  <th className="pb-2">Total</th>
-                  <th className="pb-2">Status</th>
-                  <th className="pb-2">Date</th>
+                <tr className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-100">
+                  <th className="pb-3 pl-1">Order ID</th>
+                  <th className="pb-3">Customer</th>
+                  <th className="pb-3">Total</th>
+                  <th className="pb-3">Status</th>
+                  <th className="pb-3 text-right">Date</th>
                 </tr>
               </thead>
               <tbody>
                 {data.recentOrders.map((order) => (
-                  <tr key={order._id} className="border-t border-gray-100">
-                    <td className="py-2">
-                      <Link to={`/admin/orders/${order._id}`} className="font-mono text-indigo-600 hover:underline text-xs">
+                  <tr key={order._id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+                    <td className="py-3 pl-1">
+                      <Link to={`/admin/orders/${order._id}`} className="font-mono text-xs font-medium text-gray-900 hover:underline">
                         {order.orderId}
                       </Link>
                     </td>

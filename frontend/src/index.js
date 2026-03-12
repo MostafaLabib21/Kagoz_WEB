@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider } from './context/ToastContext';
 
@@ -24,9 +25,11 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ''}>
         <AuthProvider>
-          <ToastProvider>
-            <App />
-          </ToastProvider>
+          <CartProvider>
+            <ToastProvider>
+              <App />
+            </ToastProvider>
+          </CartProvider>
         </AuthProvider>
       </GoogleOAuthProvider>
     </QueryClientProvider>

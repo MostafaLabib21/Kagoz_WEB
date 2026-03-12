@@ -1,6 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import ScrollToTop from './components/ScrollToTop';
+import CustomerLayout from './layouts/CustomerLayout';
+import HomePage from './pages/customer/HomePage';
+import ProductPage from './pages/customer/ProductPage';
+import PlaceholderPage from './components/PlaceholderPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
@@ -18,13 +22,19 @@ import HomepageManagerPage from './pages/admin/HomepageManagerPage';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
-        {/* Public / Customer routes */}
-        <Route path="/" element={<><Navbar /><div className="p-8 text-center text-gray-500">Home — coming soon</div></>} />
-        <Route path="/register" element={<><Navbar /><RegisterPage /></>} />
-        <Route path="/login" element={<><Navbar /><LoginPage /></>} />
-        <Route path="/shop" element={<><Navbar /><div className="p-8 text-center text-gray-500">Shop — coming soon</div></>} />
-        <Route path="/profile" element={<><Navbar /><ProtectedRoute><ProfilePage /></ProtectedRoute></>} />
+        {/* Customer routes */}
+        <Route element={<CustomerLayout />}>
+          <Route path="/product/:slug" element={<ProductPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/shop" element={<PlaceholderPage title="Shop — Coming Soon" />} />
+          <Route path="/cart" element={<PlaceholderPage title="Cart — Coming Soon" />} />
+          <Route path="/about" element={<PlaceholderPage title="About — Coming Soon" />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        </Route>
 
         {/* Admin routes */}
         <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>

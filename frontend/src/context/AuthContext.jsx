@@ -3,8 +3,12 @@ import axios from 'axios';
 
 const AuthContext = createContext();
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production'
+  ? 'https://kagoz-web.onrender.com'
+  : 'http://localhost:5000');
+
 // Configure axios defaults
-axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 export const AuthProvider = ({ children }) => {

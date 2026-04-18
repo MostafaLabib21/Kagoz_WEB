@@ -229,8 +229,12 @@ const googleAuth = async (req, res) => {
 
 // POST /api/auth/logout
 const logout = (req, res) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+
   res.cookie('jwt', '', {
     httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
     expires: new Date(0),
   });
   res.json({ message: 'Logged out successfully' });

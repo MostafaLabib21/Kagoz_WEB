@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production'
+  ? 'https://kagoz-web.onrender.com'
+  : 'http://localhost:5000');
+
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+  baseURL: API_BASE_URL,
   withCredentials: true,
 });
 

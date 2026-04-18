@@ -18,6 +18,18 @@ connectDB();
 
 const app = express();
 
+// Render and similar platforms run behind a proxy.
+app.set('trust proxy', 1);
+
+const allowedOrigins = [
+  ...(process.env.CLIENT_URLS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+  process.env.CLIENT_URL,
+  'http://localhost:3000',
+].filter(Boolean);
+
 // Security middleware
 app.use(helmet());
 app.use(mongoSanitize());
@@ -25,7 +37,18 @@ app.use(mongoSanitize());
 // CORS — allow frontend origin with credentials
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // Allow server-to-server requests and tools like health checks.
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   })
 );
@@ -36,6 +59,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Routes
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'kagoz-backend' });
+});
+
+app.get('/healthz', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 app.get('/api/test', (req, res) => {
   res.json({ message: 'API working' });
 });

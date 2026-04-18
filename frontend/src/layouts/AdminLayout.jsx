@@ -3,7 +3,7 @@ import { NavLink, Outlet, useNavigate, useLocation, Link } from 'react-router-do
 import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard, Package, PlusCircle, FolderOpen,
-  ShoppingBag, Layout, LogOut,
+  ShoppingBag, Layout, Settings, LogOut
 } from 'lucide-react';
 
 const NAV_SECTIONS = [
@@ -25,6 +25,12 @@ const NAV_SECTIONS = [
     label: 'ORDERS',
     items: [
       { to: '/admin/orders', label: 'All Orders', icon: ShoppingBag },
+    ],
+  },
+  {
+    label: 'SETTINGS',
+    items: [
+      { to: '/admin/settings', label: 'Store Config', icon: Settings },
     ],
   },
   {
@@ -83,7 +89,11 @@ const AdminLayout = () => {
         {/* Logo */}
         <div className="p-6 border-b border-gray-100">
           <Link to="/" className="flex flex-col leading-none">
-            <span className="text-xl font-bold text-gray-900">Kagoj</span>
+            <img
+              src="/kagoj_small_logo.png"
+              alt="Kagoj"
+              className="h-8 w-auto"
+            />
             <span className="mt-1 text-[10px] uppercase tracking-wider text-gray-500">Admin Portal</span>
           </Link>
         </div>

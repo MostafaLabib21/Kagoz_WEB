@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, Search, ShoppingBag, User, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -13,6 +13,7 @@ const navLinkClassName = ({ isActive }) =>
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
 
@@ -66,12 +67,20 @@ const Navbar = () => {
     navigate('/');
   };
 
+  const isHomePage = location.pathname === '/';
+  const logoSrc = isHomePage ? '/kagoj_big_logo.png' : '/kagoj_small_logo.png';
+  const desktopLogoClass = isHomePage ? 'h-40 w-auto' : 'h-36 w-auto';
+  const mobileLogoClass = isHomePage ? 'h-36 w-auto' : 'h-32 w-auto';
+
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white">
       <div className="mx-auto hidden max-w-7xl items-center justify-between px-4 py-4 md:flex sm:px-6 lg:px-8">
-        <Link to="/" className="flex flex-col leading-none">
-          <span className="text-2xl font-bold text-gray-900">Kagoj</span>
-          <span className="mt-1 text-xs text-gray-500">natural stationery</span>
+        <Link to="/" className="flex items-center">
+          <img
+            src={logoSrc}
+            alt="Kagoj"
+            className={desktopLogoClass}
+          />
         </Link>
 
         <nav className="flex items-center gap-8">
@@ -94,10 +103,10 @@ const Navbar = () => {
           </button>
 
           {user?.role !== 'admin' && (
-            <Link to="/cart" className="relative text-gray-600 transition-colors hover:text-gray-900" aria-label="Cart">
-              <ShoppingBag size={20} />
+            <Link to="/cart" className="relative p-1">
+              <ShoppingBag className="h-5 w-5 text-gray-700" />
               {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-xs font-semibold text-white">
+                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-gray-900 text-xs font-medium leading-none text-white">
                   {cartCount > 9 ? '9+' : cartCount}
                 </span>
               )}
@@ -182,14 +191,18 @@ const Navbar = () => {
         >
           <Menu size={20} />
         </button>
-        <Link to="/" className="text-xl font-bold text-gray-900">
-          Kagoj
+        <Link to="/" className="flex items-center">
+          <img
+            src={logoSrc}
+            alt="Kagoj"
+            className={mobileLogoClass}
+          />
         </Link>
         {user?.role !== 'admin' ? (
-          <Link to="/cart" className="relative text-gray-600 transition-colors hover:text-gray-900" aria-label="Cart">
-            <ShoppingBag size={20} />
+          <Link to="/cart" className="relative p-1">
+            <ShoppingBag className="h-5 w-5 text-gray-700" />
             {cartCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-xs font-semibold text-white">
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-gray-900 text-xs font-medium leading-none text-white">
                 {cartCount > 9 ? '9+' : cartCount}
               </span>
             )}

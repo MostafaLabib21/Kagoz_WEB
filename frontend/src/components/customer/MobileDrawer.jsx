@@ -33,7 +33,11 @@ const MobileDrawer = ({ isOpen, onClose }) => {
         <div className="flex h-full flex-col">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-gray-100 px-4 py-4">
-            <span className="text-xl font-bold text-gray-900">Kagoj</span>
+            <img
+              src="/kagoj_small_logo.png"
+              alt="Kagoj"
+              className="h-7 w-auto"
+            />
             <button
               onClick={onClose}
               className="rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900"

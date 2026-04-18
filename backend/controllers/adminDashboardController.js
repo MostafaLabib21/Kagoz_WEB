@@ -1,6 +1,32 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
+const Setting = require('../models/Setting');
+
+const getDeliveryCharge = async (req, res) => {
+  try {
+    const setting = await Setting.findOne({ key: 'delivery_charge' });
+    res.json({ amount: setting ? setting.value : 60 });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const updateDeliveryCharge = async (req, res) => {
+  try {
+    const { amount } = req.body;
+    let setting = await Setting.findOne({ key: 'delivery_charge' });
+    if(setting) {
+      setting.value = amount;
+      await setting.save();
+    } else {
+      await Setting.create({ key: 'delivery_charge', value: amount, description: 'Standard delivery charge' });
+    }
+    res.json({ message: 'Delivery charge updated', amount });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const getStats = async (req, res) => {
   try {
@@ -67,4 +93,9 @@ const getStats = async (req, res) => {
   }
 };
 
-module.exports = { getStats };
+module.exports = {
+  getStats,
+  getDeliveryCharge,
+  updateDeliveryCharge
+};
+

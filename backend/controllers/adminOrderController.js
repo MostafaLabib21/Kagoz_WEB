@@ -22,7 +22,7 @@ const getOrders = async (req, res) => {
         .skip((page - 1) * limit)
         .limit(limit)
         .populate('user', 'name email')
-        .select('orderId user guestEmail totalPrice status createdAt items paymentMethod')
+        .select('orderId user guestEmail totalPrice status createdAt items paymentMethod shippingAddress')
         .lean(),
       Order.countDocuments(filter),
       Order.aggregate([{ $group: { _id: '$status', count: { $sum: 1 } } }]),

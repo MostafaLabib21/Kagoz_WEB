@@ -4,10 +4,18 @@ import ScrollToTop from './components/ScrollToTop';
 import CustomerLayout from './layouts/CustomerLayout';
 import HomePage from './pages/customer/HomePage';
 import ProductPage from './pages/customer/ProductPage';
-import PlaceholderPage from './components/PlaceholderPage';
+import ShopPage from './pages/customer/ShopPage';
+import AboutPage from './pages/customer/AboutPage';
+import ContactPage from './pages/customer/ContactPage';
+import ShippingPage from './pages/customer/ShippingPage';
+import ReturnsPage from './pages/customer/ReturnsPage';
+import CartPage from './pages/customer/CartPage';
+import CheckoutPage from './pages/customer/CheckoutPage';
+import OrderConfirmationPage from './pages/customer/OrderConfirmationPage';
+import MyOrdersPage from './pages/customer/MyOrdersPage';
+import ProfilePage from './pages/customer/ProfilePage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
-import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import AdminLayout from './layouts/AdminLayout';
@@ -18,6 +26,7 @@ import CategoriesPage from './pages/admin/CategoriesPage';
 import OrdersListPage from './pages/admin/OrdersListPage';
 import OrderDetailPage from './pages/admin/OrderDetailPage';
 import HomepageManagerPage from './pages/admin/HomepageManagerPage';
+import SettingsPage from './pages/admin/SettingsPage';
 
 function App() {
   return (
@@ -28,9 +37,27 @@ function App() {
         <Route element={<CustomerLayout />}>
           <Route path="/product/:slug" element={<ProductPage />} />
           <Route path="/" element={<HomePage />} />
-          <Route path="/shop" element={<PlaceholderPage title="Shop — Coming Soon" />} />
-          <Route path="/cart" element={<PlaceholderPage title="Cart — Coming Soon" />} />
-          <Route path="/about" element={<PlaceholderPage title="About — Coming Soon" />} />
+          <Route path="/shop" element={<ShopPage />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/order-confirmation/:orderId" element={
+            <ProtectedRoute>
+              <OrderConfirmationPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/my-orders" element={
+            <ProtectedRoute>
+              <MyOrdersPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/shipping" element={<ShippingPage />} />
+          <Route path="/returns" element={<ReturnsPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
@@ -47,6 +74,7 @@ function App() {
           <Route path="orders" element={<OrdersListPage />} />
           <Route path="orders/:id" element={<OrderDetailPage />} />
           <Route path="homepage" element={<HomepageManagerPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Routes>
     </Router>

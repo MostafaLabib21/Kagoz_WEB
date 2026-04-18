@@ -4,14 +4,48 @@ const { protect, adminOnly } = require('../middleware/authMiddleware');
 const { upload, uploadToCloudinary } = require('../middleware/uploadMiddleware');
 const cloudinary = require('../utils/cloudinary');
 
-const { getStats } = require('../controllers/adminDashboardController');
-const { getProducts, getProduct, createProduct, updateProduct, updateAvailability, deleteProduct } = require('../controllers/adminProductController');
-const { getCategories, createCategory, updateCategory, deleteCategory } = require('../controllers/adminCategoryController');
-const { getOrders, getOrder, updateOrderStatus } = require('../controllers/adminOrderController');
-const { getHomepage, updateHero, updateFeatured, updateCategories, updateSettings } = require('../controllers/adminHomepageController');
+const {
+  getStats,
+  getDeliveryCharge,
+  updateDeliveryCharge
+} = require('../controllers/adminDashboardController');
+
+const {
+  getProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  updateAvailability,
+  deleteProduct
+} = require('../controllers/adminProductController');
+
+const {
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory
+} = require('../controllers/adminCategoryController');
+
+const {
+  getOrders,
+  getOrder,
+  updateOrderStatus
+} = require('../controllers/adminOrderController');
+
+const {
+  getHomepage,
+  updateHero,
+  updateFeatured,
+  updateCategories,
+  updateSettings
+} = require('../controllers/adminHomepageController');
 
 // All routes protected + admin only
 router.use(protect, adminOnly);
+
+// Settings
+router.get('/settings/delivery', getDeliveryCharge);
+router.post('/settings/delivery', updateDeliveryCharge);
 
 // Upload
 router.post('/upload', upload.array('images', 6), async (req, res) => {

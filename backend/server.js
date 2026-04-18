@@ -11,6 +11,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const publicRoutes = require('./routes/publicRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -42,20 +43,26 @@ app.get('/api/test', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/orders', orderRoutes);
 
-// Multer error handling
+// Multer and general error handling
 app.use((err, req, res, next) => {
+  // Multer specific errors
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({ message: 'File too large. Maximum 5MB per file.' });
   }
   if (err.code === 'LIMIT_FILE_COUNT') {
     return res.status(400).json({ message: 'Too many files. Maximum 6 files per request.' });
   }
-  if (err.message?.includes('Only image files')) {
-    return res.status(400).json({ message: err.message });
-  }
-  console.error(err.stack);
-  res.status(500).json({ error: 'Server Error' });
+
+  // Handle errors that have a status code set
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  res.status(statusCode);
+
+  res.json({
+    message: err.message,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+  });
 });
 
 const PORT = process.env.PORT || 5000;

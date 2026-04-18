@@ -53,10 +53,10 @@ const userSchema = new mongoose.Schema({
   },
   address: {
     district: String,
-    upozela: String,
+    cityUpozela: String,
+    street: String,
     zip: String,
-    road: String,
-    houseNo: String,
+    country: String,
   },
   createdAt: {
     type: Date,

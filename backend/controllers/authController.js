@@ -241,40 +241,100 @@ const getMe = async (req, res) => {
   res.json({ user: req.user });
 };
 
-// PUT /api/auth/profile
-const updateProfile = async (req, res) => {
+// GET /api/auth/profile
+const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id || req.user._id)
+      .select('-password -emailVerifyOTP -emailVerifyOTPExpiry')
+      .lean();
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Update allowed fields
-    if (req.body.name) user.name = req.body.name;
-    if (req.body.phone !== undefined) user.phone = req.body.phone;
-    if (req.body.address) user.address = req.body.address;
+    return res.json({ user });
+  } catch (error) {
+    console.error('Get profile error:', error.message);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
 
-    // Password change for local users
-    if (user.authProvider === 'local' && req.body.newPassword) {
-      if (!req.body.currentPassword) {
-        return res.status(400).json({ message: 'Current password is required' });
-      }
+// PUT /api/auth/profile
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone, address } = req.body;
+    const updates = {};
 
-      const isMatch = await user.matchPassword(req.body.currentPassword);
-      if (!isMatch) {
-        return res.status(400).json({ message: 'Current password is incorrect' });
-      }
+    if (name !== undefined) updates.name = name;
+    if (phone !== undefined) updates.phone = phone;
 
-      user.password = req.body.newPassword;
+    if (address !== undefined) {
+      updates.address = {
+        district: address?.district || '',
+        cityUpozela: address?.cityUpozela || '',
+        street: address?.street || '',
+        zip: address?.zip || '',
+        country: address?.country || '',
+      };
     }
 
-    const updatedUser = await user.save();
+    const user = await User.findByIdAndUpdate(
+      req.user.id || req.user._id,
+      { $set: updates },
+      { new: true }
+    ).select('-password -emailVerifyOTP -emailVerifyOTPExpiry');
 
-    res.json({ user: sanitizeUser(updatedUser) });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.json({ user, message: 'Profile updated successfully' });
   } catch (error) {
     console.error('Update profile error:', error.message);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// PUT /api/auth/change-password
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Current password and new password are required' });
+    }
+
+    const user = await User.findById(req.user.id || req.user._id).select('+password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.authProvider !== 'local') {
+      return res.status(400).json({ message: 'Password change not available for Google accounts' });
+    }
+
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isCurrentPasswordValid) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+
+    const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    if (!passwordPolicy.test(newPassword)) {
+      return res.status(400).json({
+        message:
+          'New password must be at least 8 characters and include uppercase, lowercase, number, and special character',
+      });
+    }
+
+    const salt = await bcrypt.genSalt(12);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save({ validateBeforeSave: false });
+
+    return res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Change password error:', error.message);
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -286,5 +346,7 @@ module.exports = {
   googleAuth,
   logout,
   getMe,
+  getProfile,
   updateProfile,
+  changePassword,
 };

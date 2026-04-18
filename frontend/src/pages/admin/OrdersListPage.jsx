@@ -114,6 +114,7 @@ const OrdersListPage = () => {
             <tr className="text-left text-xs uppercase text-gray-500">
               <th className="px-4 py-3">Order ID</th>
               <th className="px-4 py-3">Customer</th>
+              <th className="px-4 py-3">Phone</th>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Items</th>
               <th className="px-4 py-3">Total</th>
@@ -125,7 +126,7 @@ const OrdersListPage = () => {
             {isLoading ? (
               [...Array(5)].map((_, i) => (
                 <tr key={i} className="border-b border-gray-100">
-                  {[...Array(7)].map((_, j) => <td key={j} className="px-4 py-3"><div className="h-4 bg-gray-100 rounded animate-pulse" /></td>)}
+                  {[...Array(8)].map((_, j) => <td key={j} className="px-4 py-3"><div className="h-4 bg-gray-100 rounded animate-pulse" /></td>)}
                 </tr>
               ))
             ) : data?.orders?.length ? (
@@ -145,6 +146,9 @@ const OrdersListPage = () => {
                     ) : (
                       <span className="text-gray-500">Guest Order</span>
                     )}
+                  </td>
+                  <td className="px-4 py-3">
+                    <p className="text-gray-700 text-sm">{order.shippingAddress?.phone || '-'}</p>
                   </td>
                   <td className="px-4 py-3">
                     <p className="text-gray-700">
@@ -168,7 +172,7 @@ const OrdersListPage = () => {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan={7} className="px-4 py-12 text-center text-gray-400">No orders matching filters</td></tr>
+              <tr><td colSpan={8} className="px-4 py-12 text-center text-gray-400">No orders matching filters</td></tr>
             )}
           </tbody>
         </table>

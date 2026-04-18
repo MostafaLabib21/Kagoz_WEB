@@ -18,11 +18,13 @@ const orderSchema = new mongoose.Schema({
   ],
   shippingAddress: {
     name: { type: String, required: true },
+    phone: { type: String, required: true },
+    district: { type: String, required: true },
+    thana: { type: String, required: true },
     street: { type: String, required: true },
-    city: { type: String, required: true },
-    state: { type: String, required: true },
-    zip: { type: String, required: true },
-    country: { type: String, required: true },
+    house: { type: String, required: true },
+    zip: { type: String, required: false },
+    country: { type: String, required: true, default: 'Bangladesh' },
   },
   paymentMethod: { type: String, required: true },
   paymentResult: {
@@ -72,12 +74,16 @@ orderSchema.index({ status: 1, createdAt: -1 });
 
 orderSchema.pre('save', async function (next) {
   if (this.isNew) {
-    this.orderId = await generateOrderId();
-    this.statusHistory.push({
-      status: 'pending',
-      changedAt: new Date(),
-      note: 'Order placed',
-    });
+    if (!this.orderId) {
+      this.orderId = await generateOrderId();
+    }
+    if (this.statusHistory.length === 0) {
+      this.statusHistory.push({
+        status: 'pending',
+        changedAt: new Date(),
+        note: 'Order placed',
+      });
+    }
   }
   next();
 });

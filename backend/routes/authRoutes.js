@@ -10,7 +10,9 @@ const {
   googleAuth,
   logout,
   getMe,
+  getProfile,
   updateProfile,
+  changePassword,
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -62,6 +64,8 @@ router.post('/login', loginLimiter, loginValidation, login);
 router.post('/google', googleAuth);
 router.post('/logout', logout);
 router.get('/me', protect, getMe);
+router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfile);
+router.put('/change-password', protect, changePassword);
 
 module.exports = router;

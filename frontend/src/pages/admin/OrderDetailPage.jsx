@@ -129,8 +129,9 @@ const OrderDetailPage = () => {
                 {order.shippingAddress && (
                   <>
                     <p className="font-medium">{order.shippingAddress.name}</p>
-                    <p className="text-sm text-gray-600">{order.shippingAddress.street}</p>
-                    <p className="text-sm text-gray-600">{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zip}</p>
+                    <p className="text-sm text-gray-600">Phone: {order.shippingAddress.phone || order.phone || '-'}</p>
+                    <p className="text-sm text-gray-600">{order.shippingAddress.house}, {order.shippingAddress.street}</p>
+                    <p className="text-sm text-gray-600">{order.shippingAddress.thana}, {order.shippingAddress.district} {order.shippingAddress.zip ? `- ${order.shippingAddress.zip}` : ''}</p>
                     <p className="text-sm text-gray-600">{order.shippingAddress.country}</p>
                   </>
                 )}

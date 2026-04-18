@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Check } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 const ProductCard = ({ product }) => {
@@ -16,7 +16,6 @@ const ProductCard = ({ product }) => {
     compareAtPrice,
     images = [],
     stock,
-    shortDescription,
     category,
     createdAt,
   } = product;

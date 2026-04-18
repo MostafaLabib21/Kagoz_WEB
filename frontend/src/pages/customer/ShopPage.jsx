@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import {
@@ -29,7 +29,7 @@ const ShopPage = () => {
   const [searchInput, setSearchInput] = useState(search);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const updateParams = (updates) => {
+  const updateParams = useCallback((updates) => {
     const current = Object.fromEntries(searchParams.entries());
     const merged = { ...current, ...updates };
 
@@ -46,7 +46,7 @@ const ShopPage = () => {
     });
 
     setSearchParams(cleanedParams);
-  };
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -54,7 +54,7 @@ const ShopPage = () => {
     }, 500);
 
     return () => clearTimeout(timeout);
-  }, [searchInput]);
+  }, [searchInput, updateParams]);
 
   useEffect(() => {
     setSearchInput(search);

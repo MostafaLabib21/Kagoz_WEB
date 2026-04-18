@@ -5,7 +5,7 @@ import { Banknote, ShoppingBag, Package, Users, AlertTriangle, CheckCircle } fro
 import axiosInstance from '../../utils/axiosInstance';
 import StatCard from '../../components/admin/StatCard';
 import StatusBadge from '../../components/admin/StatusBadge';
-import { STATUS_LABELS, STATUS_COLORS } from '../../constants/orderConstants';
+import { STATUS_LABELS } from '../../constants/orderConstants';
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -55,7 +55,6 @@ const DashboardPage = () => {
         <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-widest mb-4">Order Status Overview</h3>
         <div className="grid grid-cols-7 gap-4">
           {statuses.map((status) => {
-            const colors = STATUS_COLORS[status];
             return (
               <button
                 key={status}

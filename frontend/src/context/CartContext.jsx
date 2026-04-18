@@ -80,11 +80,11 @@ export const CartProvider = ({ children }) => {
 
   const shipping = useMemo(() => {
     return 0;
-  }, [subtotal]);
+  }, []);
 
   const tax = useMemo(() => {
     return 0;
-  }, [subtotal]);
+  }, []);
 
   const total = useMemo(() => {
     return Math.round((subtotal + shipping + tax) * 100) / 100;

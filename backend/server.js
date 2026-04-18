@@ -30,6 +30,23 @@ const allowedOrigins = [
   'http://localhost:3000',
 ].filter(Boolean);
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) {
+    return true;
+  }
+
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  // Allow Vercel deployments (production + preview URLs).
+  if (origin.endsWith('.vercel.app')) {
+    return true;
+  }
+
+  return false;
+};
+
 // Security middleware
 app.use(helmet());
 app.use(mongoSanitize());
@@ -39,15 +56,12 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow server-to-server requests and tools like health checks.
-      if (!origin) {
+      if (isAllowedOrigin(origin)) {
         return callback(null, true);
       }
 
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error('Not allowed by CORS'));
+      // Reject silently as CORS-denied instead of triggering a 500 error handler response.
+      return callback(null, false);
     },
     credentials: true,
   })
